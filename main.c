@@ -17,17 +17,21 @@ int main(void) {
 	puts("");
 
 	printf("Your answer (input a, b, c or d)? ");
-	char answer[128] = {0};
-	if (scanf("%127s", answer) != 1) {
-	    puts("Error occured on scanf\n");
+	char answer[3] = {0};
+	if (fgets(answer, sizeof(answer), stdin) == NULL) {
+	    puts("Error occured when reading input\n");
 		return -1;
 	}
 
-	while (strlen(answer) != 1 || (strlen(answer) == 1 && (answer[0] < 'a' || answer[0] > 'd'))) {
+	while (answer[1] != '\n' || answer[0] < 'a' || answer[0] > 'd') {
 	    puts("Answer should be a, b, c or d. You typed something else.");
 	    printf("\nYour answer (input a, b, c or d)? ");
-		if (scanf("%127s", answer) == 1) {
-		    puts("Error occured on scanf\n");
+		int ch = 0;
+		if (strchr(answer, '\n') == NULL) {
+		    while ((ch = getchar()) != '\n' && ch != EOF); // consumes any leftovers if there are any
+		}
+		if (fgets(answer, sizeof(answer), stdin) == NULL) {
+			puts("Error occured when reading input\n");
 			return -1;
 		};
 	}
