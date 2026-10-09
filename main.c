@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 typedef struct question {
     const char *text;
@@ -33,6 +34,8 @@ char read_answer(void) {
 }
 
 int main(void) {
+    srand(time(NULL));
+
     int score = 0;
 	puts("Welcome to Terivia!");
 
@@ -84,6 +87,14 @@ int main(void) {
 	};
 
 	size_t question_count = sizeof(questions) / sizeof(questions[0]);
+
+	for (size_t i = question_count; i > 1; i--) {
+	    size_t j = (size_t)rand() % i;
+		Question temp = questions[j];
+		questions[j] = questions[i-1];
+		questions[i-1] = temp;
+	}
+
 	for (size_t i = 0; i < question_count; i++) {
 	    printf("%zu) %s\n", i+1, questions[i].text);
 		for (size_t j = 0; j <= 3; j++) {
