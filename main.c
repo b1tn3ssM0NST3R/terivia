@@ -27,6 +27,7 @@ char read_answer(void) {
 }
 
 int main(void) {
+    int score = 0;
 	puts("Welcome to Terivia!");
 
 	puts("\nAnswer as many questions correct to get points.");
@@ -43,9 +44,27 @@ int main(void) {
 
 	if (read_answer() == 'c') {
 	    puts("Correct!");
+		score++;
 	} else {
 	    puts("Not quite correct. Better luck, next time.");
 	}
+
+	puts("");
+
+	puts("2) When did World War I begin?");
+	puts("a) 1901");
+	puts("b) 1914");
+	puts("c) 1939");
+	puts("d) 1857");
+
+	if (read_answer() == 'b') {
+	    puts("Correct!");
+		score++;
+	} else {
+	    puts("Nope. Pay more attention to history.");
+	}
+
+	printf("\nYour score: %d out of 2\n", score);
 
 	return 0;
 }
