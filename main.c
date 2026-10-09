@@ -2,6 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 
+typedef struct question {
+    const char *text;
+    const char *choices[4];
+    char correct_answer;
+} Question;
+
 char read_answer(void) {
     printf("Your answer (input a, b, c or d)? ");
 	char answer[3] = {0};
@@ -34,37 +40,42 @@ int main(void) {
 
 	puts("");
 
-	puts("1) What is the capital of Sweden?");
-	puts("a) Helsinki");
-	puts("b) Oslo");
-	puts("c) Stockholm");
-	puts("d) Medellin");
+	Question questions[] = {
+	    {
+	        "What is the capital of Sweden?",
+			{"Helsinki", "Oslo", "Stockholm", "Medellin"},
+			'c'
+		},
+		{
+		    "When did World War I begin?",
+			{"1901", "1914", "1939", "1857"},
+			'b'
+		},
+		{
+		    "Who become Pope in May 2025?",
+			{"Pope Leo XIV", "Pope John Paul II", "Pope Francis", "Pope Benedict"},
+			'a'
+		}
+	};
 
-	puts("");
+	size_t question_count = sizeof(questions) / sizeof(questions[0]);
+	for (size_t i = 0; i < question_count; i++) {
+	    printf("%zu) %s\n", i+1, questions[i].text);
+		for (size_t j = 0; j <= 3; j++) {
+		    printf("%c) %s\n", 'a' + (int)j, questions[i].choices[j]);
+		}
 
-	if (read_answer() == 'c') {
-	    puts("Correct!");
-		score++;
-	} else {
-	    puts("Not quite correct. Better luck, next time.");
+		puts("");
+
+		if (read_answer() == questions[i].correct_answer) {
+            puts("Correct!\n");
+            score++;
+		} else {
+            puts("Not quite correct. Better luck, next time.\n");
+		}
 	}
 
-	puts("");
-
-	puts("2) When did World War I begin?");
-	puts("a) 1901");
-	puts("b) 1914");
-	puts("c) 1939");
-	puts("d) 1857");
-
-	if (read_answer() == 'b') {
-	    puts("Correct!");
-		score++;
-	} else {
-	    puts("Nope. Pay more attention to history.");
-	}
-
-	printf("\nYour score: %d out of 2\n", score);
+	printf("Your score: %d out of %zu\n", score, question_count);
 
 	return 0;
 }
