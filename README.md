@@ -14,7 +14,8 @@ gcc -Wall -Wextra -o terivia main.c
 ./terivia
 ```
 
-## Planned Features
+## Features
 - Multiple-choice questions
 - Score tracking
 - Results screen
+- Randomized question order
