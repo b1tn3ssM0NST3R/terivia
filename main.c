@@ -52,8 +52,33 @@ int main(void) {
 			'b'
 		},
 		{
-		    "Who become Pope in May 2025?",
+		    "Who became Pope in May 2025?",
 			{"Pope Leo XIV", "Pope John Paul II", "Pope Francis", "Pope Benedict"},
+			'a'
+		},
+		{
+		    "Who won the 2026 FIFA World Cup?",
+			{"Argentina", "England", "Spain", "France"},
+			'c'
+		},
+		{
+		    "Which of these is not a branch of mathematics?",
+			{"Lie Algebra", "Topology", "Menace Theory", "Knot Theory"},
+			'c'
+		},
+		{
+		    "The first country to gain independence in sub-Saharan Africa is ___.",
+			{"Sudan", "Ghana", "Nigeria", "Kenya"},
+			'b'
+		},
+		{
+		    "Who is regarded as the first computer programmer?",
+			{"Grace Hopper", "Charles Babbage", "Linus Torvalds", "Ada Lovelace"},
+			'd'
+		},
+		{
+		    "What is second highest mountain in the world?",
+			{"K2", "Mount Kilimanjaro", "Mount Everest", "Mount Kenya"},
 			'a'
 		}
 	};
@@ -76,6 +101,13 @@ int main(void) {
 	}
 
 	printf("Your score: %d out of %zu\n", score, question_count);
+	if ((size_t)score == question_count) {
+	    puts("Well done!");
+	} else if ((size_t)score > question_count/2) {
+	    puts("Not bad.");
+	} else {
+	    puts("You can do better.");
+	}
 
 	return 0;
 }
