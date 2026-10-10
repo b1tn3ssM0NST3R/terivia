@@ -14,11 +14,56 @@ bool file_answer_check(const char *read_answer) {
     return strlen(read_answer) == 1 && read_answer[0] >= 'a' && read_answer[0] <= 'd';
 }
 
+bool ask_replay(void) {
+    printf("\n%s", "Do you want to play again (y/n)? ");
+    char response[10];
+    if (fgets(response, sizeof(response), stdin) == NULL) {
+        // puts("\nError occured reading your response");
+        // exit(EXIT_FAILURE);
+        return false; // I think Ctrl-D triggers this branch, so it is valid to have it quite
+    }
+
+    char user_reply = response[0];
+    if (strchr(response, '\n') == NULL) {
+        int ch = 0;
+        while ((ch = getchar()) != '\n' && ch != EOF) {
+            // consume what is left
+        }
+    }
+
+    // Just asking for replay so validation can be relaxed over here
+    while (response[0] != 'y' && response[0] != 'n') {
+        puts("Invalid response. You need to input either 'y' or 'n'.");
+        printf("%s", "Do you want to play again (y/n)? ");
+
+        if (fgets(response, sizeof(response), stdin) == NULL) {
+            // puts("\nError occured reading your response");
+            // exit(EXIT_FAILURE);
+            return false; // check line 23
+        }
+
+        user_reply = response[0];
+        if (strchr(response, '\n') == NULL) {
+            int ch = 0;
+            while ((ch = getchar()) != '\n' && ch != EOF) {
+                // consume what is left
+            }
+        }
+    }
+
+    if (user_reply == 'y') {
+        puts(""); // adds new line if you answer correctly to space out nicely
+        return true;
+    }
+
+    return false;
+}
+
 char read_answer(void) {
     printf("Your answer (input a, b, c or d)? ");
 	char answer[3] = {0};
 	if (fgets(answer, sizeof(answer), stdin) == NULL) {
-	    puts("\nError occured when reading input\n");
+	    puts("\nError occured when reading input");
 		exit(EXIT_FAILURE);
 	}
 
@@ -41,7 +86,6 @@ char read_answer(void) {
 int main(void) {
     srand(time(NULL));
 
-    int score = 0;
 	puts("Welcome to Terivia!");
 
 	puts("\nAnswer as many questions correct to get points.");
@@ -134,37 +178,41 @@ int main(void) {
 		exit(EXIT_FAILURE);
 	}
 
-	for (size_t i = question_count; i > 1; i--) {
-	    size_t j = (size_t)rand() % i;
-		Question temp = questions[j];
-		questions[j] = questions[i-1];
-		questions[i-1] = temp;
-	}
+	do {
+	    int score = 0;
 
-	for (size_t i = 0; i < question_count; i++) {
-	    printf("%zu) %s", i+1, questions[i].text);
-		for (size_t j = 0; j <= 3; j++) {
-		    printf("%c) %s", 'a' + (int)j, questions[i].choices[j]);
-		}
+    	for (size_t i = question_count; i > 1; i--) {
+    	    size_t j = (size_t)rand() % i;
+    		Question temp = questions[j];
+    		questions[j] = questions[i-1];
+    		questions[i-1] = temp;
+    	}
 
-		puts("");
+    	for (size_t i = 0; i < question_count; i++) {
+    	    printf("%zu) %s", i+1, questions[i].text);
+    		for (size_t j = 0; j <= 3; j++) {
+    		    printf("%c) %s", 'a' + (int)j, questions[i].choices[j]);
+    		}
 
-		if (read_answer() == questions[i].correct_answer) {
-            puts("Correct!\n");
-            score++;
-		} else {
-            puts("Not quite correct. Better luck, next time.\n");
-		}
-	}
+    		puts("");
 
-	printf("Your score: %d out of %zu\n", score, question_count);
-	if ((size_t)score == question_count) {
-	    puts("Well done!");
-	} else if ((size_t)score > question_count/2) {
-	    puts("Not bad.");
-	} else {
-	    puts("You can do better.");
-	}
+    		if (read_answer() == questions[i].correct_answer) {
+                puts("Correct!\n");
+                score++;
+    		} else {
+                puts("Not quite correct. Better luck, next time.\n");
+    		}
+    	}
+
+    	printf("Your score: %d out of %zu\n", score, question_count);
+    	if ((size_t)score == question_count) {
+    	    puts("Well done!");
+    	} else if ((size_t)score > question_count/2) {
+    	    puts("Not bad.");
+    	} else {
+    	    puts("You can do better.");
+    	}
+    } while (ask_replay());
 
 	return 0;
 }
