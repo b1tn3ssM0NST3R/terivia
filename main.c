@@ -179,6 +179,36 @@ size_t load_questions(const char *filename, Question questions[], size_t capacit
 	return question_count;
 }
 
+void shuffle_questions(Question questions[], size_t count) {
+    for (size_t i = count; i > 1; i--) {
+   	    size_t j = (size_t)rand() % i;
+        Question temp = questions[j];
+        questions[j] = questions[i-1];
+        questions[i-1] = temp;
+   	}
+}
+
+int play_round(const Question questions[], size_t count) {
+    int score = 0;
+    for (size_t i = 0; i < count; i++) {
+   	    printf("%zu) %s", i+1, questions[i].text);
+  		for (size_t j = 0; j <= 3; j++) {
+  		    printf("%c) %s", 'a' + (int)j, questions[i].choices[j]);
+  		}
+
+  		puts("");
+
+  		if (read_answer() == questions[i].correct_answer) {
+            puts("Correct!\n");
+            score++;
+  		} else {
+            puts("Not quite correct. Better luck, next time.\n");
+  		}
+   	}
+
+    return score;
+}
+
 int main(void) {
     srand(time(NULL));
 
@@ -193,39 +223,17 @@ int main(void) {
 	size_t question_count = load_questions("questions", questions, capacity);
 
 	do {
-	    int score = 0;
+		shuffle_questions(questions, question_count);
+		int score = play_round(questions, question_count);
 
-    	for (size_t i = question_count; i > 1; i--) {
-    	    size_t j = (size_t)rand() % i;
-    		Question temp = questions[j];
-    		questions[j] = questions[i-1];
-    		questions[i-1] = temp;
-    	}
-
-    	for (size_t i = 0; i < question_count; i++) {
-    	    printf("%zu) %s", i+1, questions[i].text);
-    		for (size_t j = 0; j <= 3; j++) {
-    		    printf("%c) %s", 'a' + (int)j, questions[i].choices[j]);
-    		}
-
-    		puts("");
-
-    		if (read_answer() == questions[i].correct_answer) {
-                puts("Correct!\n");
-                score++;
-    		} else {
-                puts("Not quite correct. Better luck, next time.\n");
-    		}
-    	}
-
-    	printf("Your score: %d out of %zu\n", score, question_count);
-    	if ((size_t)score == question_count) {
-    	    puts("Well done!");
-    	} else if ((size_t)score > question_count/2) {
-    	    puts("Not bad.");
-    	} else {
-    	    puts("You can do better.");
-    	}
+		printf("Your score: %d out of %zu\n", score, question_count);
+       	if ((size_t)score == question_count) {
+       	    puts("Well done!");
+       	} else if ((size_t)score > question_count/2) {
+       	    puts("Not bad.");
+       	} else {
+       	    puts("You can do better.");
+       	}
     } while (ask_replay());
 
 	return 0;
