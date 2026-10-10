@@ -36,6 +36,7 @@ Medellin
 c
 ```
 - No blank lines between questions and no extra blank lines at the end.
-- A maximum of 100 questions supported for now.
+- You can load as many questions as you want theoritically, but you are limited by the memory you have so don't go
+too crazy.
 - The question text and possible answers can contain at most 254 characters.
 - Editing the file doesn't require recompiling.
