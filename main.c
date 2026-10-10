@@ -179,6 +179,15 @@ size_t load_questions(const char *filename, Question questions[], size_t capacit
 	return question_count;
 }
 
+void shuffle_questions(Question questions[], size_t count) {
+    for (size_t i = count; i > 1; i--) {
+   	    size_t j = (size_t)rand() % i;
+        Question temp = questions[j];
+        questions[j] = questions[i-1];
+        questions[i-1] = temp;
+   	}
+}
+
 int main(void) {
     srand(time(NULL));
 
@@ -195,12 +204,7 @@ int main(void) {
 	do {
 	    int score = 0;
 
-    	for (size_t i = question_count; i > 1; i--) {
-    	    size_t j = (size_t)rand() % i;
-    		Question temp = questions[j];
-    		questions[j] = questions[i-1];
-    		questions[i-1] = temp;
-    	}
+		shuffle_questions(questions, question_count);
 
     	for (size_t i = 0; i < question_count; i++) {
     	    printf("%zu) %s", i+1, questions[i].text);
