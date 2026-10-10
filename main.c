@@ -83,23 +83,13 @@ char read_answer(void) {
 	return answer[0];
 }
 
-int main(void) {
-    srand(time(NULL));
-
-	puts("Welcome to Terivia!");
-
-	puts("\nAnswer as many questions correct to get points.");
-
-	puts("");
-
-	FILE *file = fopen("questions", "r");
+size_t load_questions(const char *filename, Question questions[], size_t capacity) {
+ 	FILE *file = fopen(filename, "r");
 	if (file == NULL) {
-		perror("questions");
+		perror(filename);
 		exit(EXIT_FAILURE);
 	}
 
-	Question questions[100];
-	size_t capacity = sizeof(questions) / sizeof(questions[0]);
 	size_t question_count = 0;
 	char line[10];
 	while (question_count < capacity) {
@@ -161,12 +151,14 @@ int main(void) {
 	    int extra = getc(file);
 
 		if (extra != EOF) {
-		    puts("Too many questions, maximum is 100");
+		    printf("Too many questions, maximum is %zu\n", capacity);
+			fclose(file);
 			exit(EXIT_FAILURE);
 		}
 
 		if (ferror(file)) {
 		    puts("Error reading questions file");
+			fclose(file);
 			exit(EXIT_FAILURE);
 		}
 	}
@@ -177,6 +169,22 @@ int main(void) {
 	    puts("No questions read.");
 		exit(EXIT_FAILURE);
 	}
+
+	return question_count;
+}
+
+int main(void) {
+    srand(time(NULL));
+
+	puts("Welcome to Terivia!");
+
+	puts("\nAnswer as many questions correct to get points.");
+
+	puts("");
+
+	Question questions[100];
+	size_t capacity = sizeof(questions) / sizeof(questions[0]);
+	size_t question_count = load_questions("questions", questions, capacity);
 
 	do {
 	    int score = 0;
