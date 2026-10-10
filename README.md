@@ -20,8 +20,9 @@ gcc -Wall -Wextra -o terivia main.c
 - Results screen
 - Randomized question order
 - Loading questions from file
+- Replay without restarting program
 
-## Question File
+## Questions File
 - The file should be named `questions` and must be in the directory where you run the program. If you want to use a
 different name and want it to be in a different directory, you can edit it in the code.
 - Each question must occupy six lines: question text, four possible answers and then the correct answer(either a, 
