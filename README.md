@@ -15,18 +15,26 @@ gcc -Wall -Wextra -o terivia main.c
 ```
 
 ## Features
-### Multiple-choice questions
-### Score tracking
-### Results screen
-### Randomized question order
-### Loading questions from file
-Questions can be loaded from file with this format
+- Multiple-choice questions
+- Score tracking
+- Results screen
+- Randomized question order
+- Loading questions from file
+
+## Question File
+- The file should be named `questions` and must be in the directory where you run the program. If you want to use a
+different name and want it to be in a different directory, you can edit it in the code.
+- Each question must occupy six lines: question text, four possible answers and then the correct answer(either a, 
+b, c or d).
 ```
-Question text
-Possible answer 1
-Possible answer 2
-Possible answer 3
-Possible answer 4
-Correct answer
+What is the capital of Sweden?
+Helsinki
+Oslo
+Stockholm
+Medellin
+c
 ```
-with no space between consecutive questions.
+- No blank lines between questions and no extra blank lines at the end.
+- A maximum of 100 questions supported for now.
+- The question text and possible answers can contain at most 254 characters.
+- Editing the file doesn't require recompiling.
