@@ -3,10 +3,15 @@ A terminal trivia app written in C.
 
 ## Requirements
 GCC (the version I used to compile was 16.2.1) or any modern C compiler
+Make
 
 ## Build
 ```sh
 gcc -Wall -Wextra -o terivia main.c
+```
+or
+```sh
+make
 ```
 
 ## Run
