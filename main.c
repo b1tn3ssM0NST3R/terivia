@@ -63,8 +63,11 @@ char read_answer(void) {
     printf("Your answer (input a, b, c or d)? ");
 	char answer[3] = {0};
 	if (fgets(answer, sizeof(answer), stdin) == NULL) {
-	    puts("\nError occured when reading input");
-		exit(EXIT_FAILURE);
+		if (ferror(stdin)) {
+	        puts("\nError occured when reading input");
+			exit(EXIT_FAILURE);
+		}
+		exit(EXIT_SUCCESS);
 	}
 
 	while (answer[1] != '\n' || answer[0] < 'a' || answer[0] > 'd') {
@@ -75,8 +78,11 @@ char read_answer(void) {
 		    while ((ch = getchar()) != '\n' && ch != EOF); // consumes any leftovers if there are any
 		}
 		if (fgets(answer, sizeof(answer), stdin) == NULL) {
-			puts("\nError occured when reading input\n");
-			exit(EXIT_FAILURE);
+		    if (ferror(stdin)) {
+				puts("\nError occured when reading input\n");
+				exit(EXIT_FAILURE);
+			}
+			exit(EXIT_SUCCESS);
 		};
 	}
 
