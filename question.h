@@ -10,8 +10,6 @@ typedef struct question {
 } Question;
 
 void shuffle_questions(Question questions[], size_t count);
-
-
 Question *load_questions(const char *filename, size_t *count);
 
 #endif

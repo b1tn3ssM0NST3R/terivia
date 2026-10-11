@@ -1,19 +1,22 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -std=c99
 
-terivia: main.o question.o
-	$(CC) $(CFLAGS) main.o question.o -o terivia
+terivia: main.o question.o input.o
+	$(CC) $(CFLAGS) main.o question.o input.o -o terivia
 
-main.o: main.c question.h
+main.o: main.c question.h input.h
 	$(CC) $(CFLAGS) -c main.c -o main.o
 
 question.o: question.c question.h
 	$(CC) $(CFLAGS) -c question.c -o question.o
 
+input.o: input.c input.h
+	$(CC) $(CFLAGS) -c input.c -o input.o
+
 .PHONY: clean
 
 clean:
-	rm -f terivia main.o question.o
+	rm -f terivia main.o question.o input.o
 
 .PHONY: test
 
