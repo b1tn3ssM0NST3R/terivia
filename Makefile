@@ -8,3 +8,8 @@ terivia: main.c
 
 clean:
 	rm -f terivia
+
+.PHONY: test
+
+test: terivia
+	sh tests/correct_answer.sh
