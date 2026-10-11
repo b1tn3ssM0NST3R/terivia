@@ -12,13 +12,12 @@ typedef enum input_status {
     INPUT_ERROR
 } InputStatus;
 
-bool ask_replay(void) {
+InputStatus ask_replay(bool *reply) {
     printf("\n%s", "Do you want to play again (y/n)? ");
     char response[10];
     if (fgets(response, sizeof(response), stdin) == NULL) {
-        // puts("\nError occured reading your response");
-        // exit(EXIT_FAILURE);
-        return false; // I think Ctrl-D triggers this branch, so it is valid to have it quite
+        *reply = false;
+        return ferror(stdin) ? INPUT_ERROR : INPUT_END;
     }
 
     char user_reply = response[0];
@@ -35,9 +34,8 @@ bool ask_replay(void) {
         printf("%s", "Do you want to play again (y/n)? ");
 
         if (fgets(response, sizeof(response), stdin) == NULL) {
-            // puts("\nError occured reading your response");
-            // exit(EXIT_FAILURE);
-            return false; // check if fgets above
+            *reply =  false;
+            return ferror(stdin) ? INPUT_ERROR : INPUT_END;
         }
 
         user_reply = response[0];
@@ -51,10 +49,12 @@ bool ask_replay(void) {
 
     if (user_reply == 'y') {
         puts(""); // adds new line if you answer correctly to space out nicely
-        return true;
+        *reply = true;
+        return INPUT_OK;
     }
 
-    return false;
+    *reply = false;
+    return INPUT_OK;
 }
 
 InputStatus read_answer(char *input) {
@@ -135,6 +135,8 @@ int main(int argc, char *argv[]) {
 	size_t question_count = 0;
 	Question *questions = load_questions(filename, &question_count);
 
+	bool replay = false;
+
 	do {
 		shuffle_questions(questions, question_count);
 		int score = 0;
@@ -152,7 +154,13 @@ int main(int argc, char *argv[]) {
        	} else {
        	    puts("You can do better.");
        	}
-    } while (ask_replay());
+
+        InputStatus replay_status = ask_replay(&replay);
+        if (replay_status != INPUT_OK) {
+            break;
+        }
+    } while (replay);
+
 
     free(questions);
 
