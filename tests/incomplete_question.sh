@@ -20,4 +20,9 @@ fi
 
 printf '%s\n' "$output" | grep -Fq "Couldn't read correct answer to question 1"
 
+if printf '%s\n' "$output" | grep -Eq 'AddressSanitizer|LeakSanitizer|runtime error:'; then
+    printf '%s\n' "$output"
+    exit 1
+fi
+
 printf 'PASS: Incomplete question read from questions file is not accepted\n'

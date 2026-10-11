@@ -11,3 +11,14 @@ jobs:
         run: make
       - name: Test gameplay
         run: make test
+  sanitize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Build with sanitizers
+        run: make CFLAGS='-Wall -Wextra -std=c99 -g -O1 -fsanitize=address,undefined -fno-omit-frame-pointer'
+      - name: Test with sanitizers
+        env:
+          ASAN_OPTIONS: detect_leaks=1
+          UBSAN_OPTIONS: halt_on_error=1
+        run: make test
