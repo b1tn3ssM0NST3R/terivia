@@ -19,3 +19,5 @@ if output=$(cd "$test_dir" && ./terivia </dev/null 2>&1); then
 fi
 
 printf '%s\n' "$output" | grep -Fq "Couldn't read correct answer to question 1"
+
+printf 'PASS: Incomplete question read from questions file is not accepted\n'

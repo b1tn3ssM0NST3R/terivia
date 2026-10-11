@@ -17,3 +17,5 @@ EOF
 output=$(cd "$test_dir" && printf 'c\nn\n' | ./terivia)
 
 printf '%s\n' "$output" | grep -Fq 'Your score: 1 out of 1'
+
+printf 'PASS: Correct answer is picked up correctly\n'

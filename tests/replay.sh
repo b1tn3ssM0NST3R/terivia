@@ -21,3 +21,5 @@ printf '%s\n' "$output" | grep -Fq 'Your score: 0 out of 1'
 
 score_lines=$(printf '%s\n' "$output" | grep -Fc 'Your score:')
 test "$score_lines" -eq 2
+
+printf 'PASS: Replay works correctly\n'

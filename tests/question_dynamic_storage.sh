@@ -24,3 +24,5 @@ printf "n\n" >> "$test_dir/answers"
 output=$(cd "$test_dir" && ./terivia < answers)
 
 printf '%s\n' "$output" | grep -Fq "Your score: 21 out of 21"
+
+printf 'PASS: Storage for questions grow correctly as more questions are added\n'
