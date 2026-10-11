@@ -61,13 +61,20 @@ int main(int argc, char *argv[]) {
 
 	bool replay = false;
 
+	int exit_status = EXIT_SUCCESS;
 	do {
 		shuffle_questions(questions, question_count);
 		int score = 0;
 		InputStatus play_round_status = play_round(questions, question_count, &score);
 
-		if (play_round_status != INPUT_OK) {
-		    break;
+		switch (play_round_status) {
+		    case INPUT_OK:
+				break;
+			case INPUT_END:
+			    goto cleanup;
+			case INPUT_ERROR:
+			    exit_status = EXIT_FAILURE;
+				goto cleanup;
 		}
 
 		printf("Your score: %d out of %zu\n", score, question_count);
@@ -80,13 +87,19 @@ int main(int argc, char *argv[]) {
        	}
 
         InputStatus replay_status = ask_replay(&replay);
-        if (replay_status != INPUT_OK) {
-            break;
+        switch (replay_status) {
+            case INPUT_OK:
+                break;
+            case INPUT_END:
+                goto cleanup;
+            case INPUT_ERROR:
+                exit_status = EXIT_FAILURE;
+                goto cleanup;
         }
+
     } while (replay);
 
-
-    free(questions);
-
-	return ferror(stdin) ? EXIT_FAILURE : EXIT_SUCCESS;
+	cleanup:
+	    free(questions);
+		return exit_status;
 }
