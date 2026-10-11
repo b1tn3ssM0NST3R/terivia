@@ -17,3 +17,5 @@ test: terivia
 	sh tests/replay.sh
 	sh tests/incomplete_question.sh
 	sh tests/question_dynamic_storage.sh
+	sh tests/argument_question_file.sh
+	sh tests/eof_answer.sh
