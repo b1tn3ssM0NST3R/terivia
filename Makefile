@@ -13,3 +13,4 @@ clean:
 
 test: terivia
 	sh tests/correct_answer.sh
+	sh tests/invalid_answer.sh
