@@ -240,8 +240,16 @@ int play_round(const Question questions[], size_t count) {
     return score;
 }
 
-int main(void) {
+int main(int argc, char *argv[]) {
     srand(time(NULL));
+
+    const char *filename = "sample_questions/test_questions";
+    if (argc == 2) {
+        filename = argv[1];
+    } else if (argc > 2) {
+        fprintf(stderr, "usage: %s [questions_file]\n", argv[0]);
+        return EXIT_FAILURE;
+    }
 
 	puts("Welcome to Terivia!");
 
@@ -250,7 +258,7 @@ int main(void) {
 	puts("");
 
 	size_t question_count = 0;
-	Question *questions = load_questions("questions", &question_count);
+	Question *questions = load_questions(filename, &question_count);
 
 	do {
 		shuffle_questions(questions, question_count);

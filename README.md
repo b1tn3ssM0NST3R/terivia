@@ -18,6 +18,14 @@ make
 ```sh
 ./terivia
 ```
+To this to load default questions (`test_questions`) found in the sample questions directory.
+
+or
+
+```sh
+./terivia questions_file
+```
+To load a questions file of your choice.
 
 ## Features
 - Multiple-choice questions
@@ -28,8 +36,6 @@ make
 - Replay without restarting program
 
 ## Questions File
-- The file should be named `questions` and must be in the directory where you run the program. If you want to use a
-different name and want it to be in a different directory, you can edit it in the code.
 - Each question must occupy six lines: question text, four possible answers and then the correct answer(either a, 
 b, c or d).
 ```
@@ -45,3 +51,4 @@ c
 too crazy.
 - The question text and possible answers can contain at most 254 characters.
 - Editing the file doesn't require recompiling.
+- Sample question files can be found in the `sample_questions` directory.
