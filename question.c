@@ -19,10 +19,12 @@ void shuffle_questions(Question questions[], size_t count) {
 }
 
 Question *load_questions(const char *filename, size_t *count) {
+    *count = 0;
+
     FILE *file = fopen(filename, "r");
 	if (file == NULL) {
 		perror(filename);
-		exit(EXIT_FAILURE);
+		return NULL;
 	}
 
 	size_t capacity = 10;
@@ -30,7 +32,7 @@ Question *load_questions(const char *filename, size_t *count) {
 	if (questions == NULL) {
 	    perror("Allocating space for questions");
 		fclose(file);
-		exit(EXIT_FAILURE);
+		return NULL;
 	}
 
 	size_t question_count = 0;
@@ -41,16 +43,12 @@ Question *load_questions(const char *filename, size_t *count) {
 			if (strlen(question.text) == sizeof(question.text) - 1 &&
 			    question.text[sizeof(question.text)-2] != '\n') {
 				puts("Text that was read is too long");
-				free(questions);
-				fclose(file);
-				exit(EXIT_FAILURE);
+				goto fail;
 			}
 		} else {
 		    if (ferror(file)) {
 	            printf("Couldn't read question %zu from questions file\n", question_count+1);
-				free(questions);
-				fclose(file);
-				exit(EXIT_FAILURE);
+				goto fail;
 			}
 			break;
 		}
@@ -60,15 +58,11 @@ Question *load_questions(const char *filename, size_t *count) {
 				if (strlen(question.choices[i]) == sizeof(question.choices[i]) - 1 &&
 			        question.choices[i][sizeof(question.choices[i])-2] != '\n') {
 					puts("Text that was read is too long");
-					free(questions);
-					fclose(file);
-					exit(EXIT_FAILURE);
+					goto fail;
 				}
 			} else {
 			    printf("Couldn't read answer %d of question %zu\n", i+1, question_count+1);
-				free(questions);
-				fclose(file);
-				exit(EXIT_FAILURE);
+				goto fail;
 			}
 		}
 
@@ -76,24 +70,18 @@ Question *load_questions(const char *filename, size_t *count) {
 			if (strlen(line) == sizeof(line) - 1 &&
 			    line[sizeof(line)-2] != '\n') {
 				puts("Text that was read is too long");
-				free(questions);
-				fclose(file);
-				exit(EXIT_FAILURE);
+				goto fail;
 			}
 		    line[strcspn(line, "\n")] = '\0';
 		    if (file_answer_check(line)) {
 				question.correct_answer = line[0];
 			} else {
 			    printf("Invalid answer read for question %zu\n", question_count+1);
-				free(questions);
-				fclose(file);
-				exit(EXIT_FAILURE);
+				goto fail;
 			}
 		} else {
 		    printf("Couldn't read correct answer to question %zu\n", question_count+1);
-			free(questions);
-			fclose(file);
-			exit(EXIT_FAILURE);
+			goto fail;
 		}
 
 
@@ -102,17 +90,13 @@ Question *load_questions(const char *filename, size_t *count) {
 			// just in case someone decides to go crazy with the questions
     		if (capacity > (SIZE_MAX / sizeof(*questions)) / 2) {
     		    puts("Questions are too many.");
-    			free(questions);
-    			fclose(file);
-    			exit(EXIT_FAILURE);
+    			goto fail;
     		}
 		    size_t new_capacity = capacity * 2;
 			Question *new_questions = realloc(questions, new_capacity * sizeof(*questions));
 			if (new_questions == NULL) {
 				perror("Allocating space for new questions");
-			    free(questions);
-				fclose(file);
-				exit(EXIT_FAILURE);
+				goto fail;
 			}
 
 			questions = new_questions;
@@ -122,14 +106,18 @@ Question *load_questions(const char *filename, size_t *count) {
 		questions[question_count++] = question;
 	}
 
-	fclose(file);
-
 	if (question_count == 0) {
 	    puts("No questions read.");
-		free(questions);
-		exit(EXIT_FAILURE);
+		goto fail;
 	}
+
+	fclose(file);
 
 	*count = question_count;
 	return questions;
+
+	fail:
+	    free(questions);
+		fclose(file);
+		return NULL;
 }

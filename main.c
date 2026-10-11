@@ -55,6 +55,9 @@ int main(int argc, char *argv[]) {
 
 	size_t question_count = 0;
 	Question *questions = load_questions(filename, &question_count);
+	if (questions == NULL) {
+	    return EXIT_FAILURE;
+	}
 
 	bool replay = false;
 
