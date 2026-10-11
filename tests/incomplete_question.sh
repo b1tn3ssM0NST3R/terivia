@@ -13,7 +13,7 @@ Stockholm
 Medellin
 EOF
 
-if output=$(cd "$test_dir" && ./terivia </dev/null 2>&1); then
+if output=$(cd "$test_dir" && ./terivia questions </dev/null 2>&1); then
     echo "FAIL: an incomplete question was read and accepted from questions file"
     exit 1
 fi

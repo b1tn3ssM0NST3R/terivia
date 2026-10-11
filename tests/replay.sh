@@ -14,7 +14,7 @@ Medellin
 c
 EOF
 
-output=$(cd "$test_dir" && printf 'c\ny\na\nn\n' | ./terivia)
+output=$(cd "$test_dir" && printf 'c\ny\na\nn\n' | ./terivia questions)
 
 printf '%s\n' "$output" | grep -Fq 'Your score: 1 out of 1'
 printf '%s\n' "$output" | grep -Fq 'Your score: 0 out of 1'

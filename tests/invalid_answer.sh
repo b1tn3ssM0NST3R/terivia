@@ -14,7 +14,7 @@ Medellin
 c
 EOF
 
-output=$(cd "$test_dir" && printf 'notavalidanswer\nc\nn\n' | ./terivia)
+output=$(cd "$test_dir" && printf 'notavalidanswer\nc\nn\n' | ./terivia questions)
 
 printf '%s\n' "$output" | grep -Fq 'Answer should be a, b, c or d.'
 printf '%s\n' "$output" | grep -Fq 'Your score: 1 out of 1'
