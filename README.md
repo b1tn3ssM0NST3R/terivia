@@ -7,7 +7,7 @@ Make
 
 ## Build
 ```sh
-gcc -Wall -Wextra -o terivia main.c
+gcc -Wall -Wextra main.c question.c -o terivia
 ```
 or
 ```sh
