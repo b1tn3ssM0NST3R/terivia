@@ -2,6 +2,13 @@
 #include <stdio.h>
 #include <string.h>
 
+static void discard_line(void) {
+    int ch = 0;
+    while ((ch = getchar()) != '\n' && ch != EOF) {
+        // consume what is left
+    }
+}
+
 InputStatus ask_replay(bool *replay) {
     printf("\n%s", "Do you want to play again (y/n)? ");
     char response[10];
@@ -12,10 +19,7 @@ InputStatus ask_replay(bool *replay) {
 
     char user_reply = response[0];
     if (strchr(response, '\n') == NULL) {
-        int ch = 0;
-        while ((ch = getchar()) != '\n' && ch != EOF) {
-            // consume what is left
-        }
+        discard_line();
     }
 
     // Just asking for replay so validation can be relaxed over here
@@ -30,10 +34,7 @@ InputStatus ask_replay(bool *replay) {
 
         user_reply = response[0];
         if (strchr(response, '\n') == NULL) {
-            int ch = 0;
-            while ((ch = getchar()) != '\n' && ch != EOF) {
-                // consume what is left
-            }
+            discard_line();
         }
     }
 
@@ -60,9 +61,8 @@ InputStatus read_answer(char *input) {
 	while (answer[1] != '\n' || answer[0] < 'a' || answer[0] > 'd') {
 	    puts("Answer should be a, b, c or d. You typed something else.");
 	    printf("\nYour answer (input a, b, c or d)? ");
-		int ch = 0;
 		if (strchr(answer, '\n') == NULL) {
-		    while ((ch = getchar()) != '\n' && ch != EOF); // consumes any leftovers if there are any
+		    discard_line();
 		}
 		if (fgets(answer, sizeof(answer), stdin) == NULL) {
 		    if (ferror(stdin)) {
