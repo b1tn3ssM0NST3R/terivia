@@ -15,3 +15,4 @@ test: terivia
 	sh tests/correct_answer.sh
 	sh tests/invalid_answer.sh
 	sh tests/replay.sh
+	sh tests/incomplete_question.sh
