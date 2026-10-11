@@ -6,6 +6,12 @@
 #include <time.h>
 #include "question.h"
 
+typedef enum input_status {
+    INPUT_OK,
+    INPUT_END,
+    INPUT_ERROR
+} InputStatus;
+
 bool ask_replay(void) {
     printf("\n%s", "Do you want to play again (y/n)? ");
     char response[10];
@@ -51,14 +57,14 @@ bool ask_replay(void) {
     return false;
 }
 
-char read_answer(void) {
+InputStatus read_answer(char *input) {
     printf("Your answer (input a, b, c or d)? ");
 	char answer[3] = {0};
 	if (fgets(answer, sizeof(answer), stdin) == NULL) {
 		if (ferror(stdin)) {
 	        puts("\nError occured when reading input");
 		}
-		return '\0';
+		return ferror(stdin) ? INPUT_ERROR : INPUT_END;
 	}
 
 	while (answer[1] != '\n' || answer[0] < 'a' || answer[0] > 'd') {
@@ -72,14 +78,15 @@ char read_answer(void) {
 		    if (ferror(stdin)) {
 				puts("\nError occured when reading input\n");
 			}
-			return '\0';
+			return ferror(stdin) ? INPUT_ERROR : INPUT_END;
 		};
 	}
 
-	return answer[0];
+	*input = answer[0];
+	return INPUT_OK;
 }
 
-int play_round(const Question questions[], size_t count) {
+InputStatus play_round(const Question questions[], size_t count, int *final_score) {
     int score = 0;
     for (size_t i = 0; i < count; i++) {
    	    printf("%zu) %s", i+1, questions[i].text);
@@ -89,10 +96,10 @@ int play_round(const Question questions[], size_t count) {
 
   		puts("");
 
-        char answer = read_answer();
-        // this is so that by inputing Ctrl-D, execution reaches the freeing memory code
-        if (answer == '\0') {
-            return -1;
+        char answer = 0;
+        InputStatus read_answer_status = read_answer(&answer);
+        if (read_answer_status != INPUT_OK) {
+            return read_answer_status;
         }
 
   		if (answer == questions[i].correct_answer) {
@@ -103,7 +110,9 @@ int play_round(const Question questions[], size_t count) {
   		}
    	}
 
-    return score;
+
+    *final_score = score;
+    return INPUT_OK;
 }
 
 int main(int argc, char *argv[]) {
@@ -128,10 +137,10 @@ int main(int argc, char *argv[]) {
 
 	do {
 		shuffle_questions(questions, question_count);
-		int score = play_round(questions, question_count);
+		int score = 0;
+		InputStatus play_round_status = play_round(questions, question_count, &score);
 
-		// check play round function
-		if (score == -1) {
+		if (play_round_status != INPUT_OK) {
 		    break;
 		}
 
